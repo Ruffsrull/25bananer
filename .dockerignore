@@ -1,5 +1,8 @@
 .git
 .github
 Dockerfile
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9b84e6d4c5aeac05a0b672b0bf20ab1ea3c4a28e
 README.md
