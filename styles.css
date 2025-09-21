@@ -194,17 +194,7 @@ main {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
 }
 
-.beer-foam {
-    position: absolute;
-    bottom: calc(12% + 70%);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    height: 90px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 12px;
-}
+.beer-foam {`r`n    position: absolute;`r`n    top: -18px;`r`n    left: 50%;`r`n    transform: translateX(-50%);`r`n    width: 84%;`r`n    height: 88px;`r`n    display: flex;`r`n    justify-content: space-between;`r`n    padding: 0 10px;`r`n}
 
 .beer-foam span {
     flex: 1;
@@ -689,4 +679,5 @@ footer a:hover {
         width: 100%;
     }
 }
+
 
