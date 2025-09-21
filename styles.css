@@ -497,8 +497,56 @@ footer a:hover {
     50% {
         transform: translateY(-6px) scaleY(1.04);
     }
+}.jumpscare {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.92);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 9999;
 }
 
+.jumpscare.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.jumpscare-frame {
+    width: min(90vw, 420px);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.jumpscare.visible .jumpscare-frame {
+    animation: jumpscare-pop 0.45s ease-out;
+}
+
+.jumpscare img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+@keyframes jumpscare-pop {
+    0% {
+        transform: scale(0.7);
+        filter: brightness(1.4);
+    }
+    60% {
+        transform: scale(1.08);
+        filter: brightness(1.1);
+    }
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+}
 @media (min-width: 768px) {
     body {
         padding: 0 1.5rem 4rem;
@@ -560,7 +608,6 @@ footer a:hover {
         max-width: 1120px;
     }
 }
-
 @media (max-width: 768px) {
     body {
         padding: 0 1rem 3rem;
@@ -611,9 +658,6 @@ footer a:hover {
         padding: 1.4rem;
     }
 
-
-
-
     .vibes {
         padding: 2.2rem 1.4rem;
     }
@@ -645,7 +689,4 @@ footer a:hover {
         width: 100%;
     }
 }
-
-
-
 
