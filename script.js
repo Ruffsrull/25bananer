@@ -8,6 +8,11 @@
     var storageKey = "oktoberfest25-rsvp";
     var FORM_ENDPOINT = "https://formspree.io/f/xldprjdq";
     var jumpscareTimer = null;
+    var jumpscareHideTimer = null;
+
+    if (jumpscare) {
+        jumpscare.style.display = "none";
+    }
 
     function setActiveResponse(value) {
         responseButtons.forEach(function (btn) {
@@ -22,6 +27,14 @@
         submitBtn.disabled = !value;
     }
 
+    function finishHideJumpscare() {
+        if (!jumpscare) {
+            return;
+        }
+        jumpscare.style.display = "none";
+        jumpscareHideTimer = null;
+    }
+
     function hideJumpscare() {
         if (!jumpscare) {
             return;
@@ -32,14 +45,25 @@
             clearTimeout(jumpscareTimer);
             jumpscareTimer = null;
         }
+        if (jumpscareHideTimer) {
+            clearTimeout(jumpscareHideTimer);
+        }
+        jumpscareHideTimer = setTimeout(finishHideJumpscare, 260);
     }
 
     function showJumpscare() {
         if (!jumpscare) {
             return;
         }
-        jumpscare.classList.add("visible");
-        jumpscare.setAttribute("aria-hidden", "false");
+        if (jumpscareHideTimer) {
+            clearTimeout(jumpscareHideTimer);
+            jumpscareHideTimer = null;
+        }
+        jumpscare.style.display = "flex";
+        requestAnimationFrame(function () {
+            jumpscare.classList.add("visible");
+            jumpscare.setAttribute("aria-hidden", "false");
+        });
         if (jumpscareTimer) {
             clearTimeout(jumpscareTimer);
         }
