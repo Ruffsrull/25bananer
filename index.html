@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oktoberfest 25-årsfest</title>
+    <title>25 oktober Save the Date</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="hero">
         <div class="hero-text">
-            <h1>Du är bjuden!</h1>
-            <p class="tagline">Fira mina 25 jordsnurr med oktoberfest-kalas.</p>
-            <p class="date">Fredag 24 oktober 2025 · 18:00</p>
+            <p class="topline">Facebook-evenemang? Nej tack.</p>
+            <h1>Save the Date – 25 Oktober</h1>
+            <p class="date">Lördag 25 oktober 2025 · Karlstad (plats avslöjas senare)</p>
+            <p class="subnote">Det här är en intresseanmälan.</p>
         </div>
         <div class="hero-mug" aria-hidden="true">
             <div class="mug-body">
@@ -31,33 +32,38 @@
 
     <div class="beer-ribbon" aria-hidden="true">
         <div class="beer-ribbon-track">
-            <span>SKÅL · PROST · ÖL · FEST · 25 JORDSNURR · </span>
-            <span aria-hidden="true">SKÅL · PROST · ÖL · FEST · 25 JORDSNURR · </span>
+            <span>BARA KOM · 25 OKTOBER · BÄRS · BÄRS · MAT · DANS · </span>
+            <span aria-hidden="true">BARA KOM · 25 OKTOBER · BÄRS · BÄRS · MAT · DANS · </span>
         </div>
     </div>
 
     <main>
         <section class="details" aria-labelledby="details-title">
-            <h2 id="details-title">Festinformation</h2>
+            <h2 id="details-title">Det här vet vi (typ)</h2>
             <div class="detail-grid">
                 <article>
                     <h3>Plats</h3>
-                    <p>Ah vi får se, blir förmodligen på en parkbänk utanför Ica Nära</p>
+                    <p>Karlstad är säkert, exakt spot meddelas när logistiken satt sig.</p>
                 </article>
                 <article>
                     <h3>Klädsel</h3>
-                    <p>Dirndl, lederhosen eller något blått och vitt. Kom gärna redo för skål!</p>
+                    <p>Allt från jeans till smoking funkar! </p>
                 </article>
                 <article>
                     <h3>Det här händer</h3>
-                    <p>Livemusik, bratwurst och brezelbuffé, quiz med oktoberfesttema och en skål varje heltimme.</p>
+                    <p>Vi fixar något – exakt vad är fortfarande lite oklart, men att det blir bärs är redan bestämt.</p>
                 </article>
             </div>
         </section>
 
+        <section class="vibes" aria-labelledby="vibes-title">
+            <h2 id="vibes-title">Vad du kan förvänta dig</h2>
+            <p>Allt hänger på hur många som kommer. Blir vi ett gäng med energi? Då skruvar vi upp tempot. Känns det mer som soffläge? Då kör vi på den nivån. Oavsett vilket – boka in 25 oktober.</p>
+        </section>
+
         <section class="rsvp" aria-labelledby="rsvp-title">
             <h2 id="rsvp-title">Kan du komma?</h2>
-            <p>Meddela gärna om du firar med mig. Skriv även om du har allergier eller låtönskemål.</p>
+            <p>Meddela gärna om du firar med mig. Skriv även om du har allergier, önskemål eller bara vill säga hej.</p>
             <form id="rsvp-form">
                 <label for="name">Namn</label>
                 <input type="text" id="name" name="name" placeholder="Ditt namn" required>
@@ -66,7 +72,7 @@
                 <input type="email" id="email" name="email" placeholder="du@example.com" required>
 
                 <label for="message">Meddelande</label>
-                <textarea id="message" name="message" placeholder="Något jag bör veta?"></textarea>
+                <textarea id="message" name="message" placeholder="Har du förslag eller frågor? Skriv här."></textarea>
 
                 <div class="response-buttons" role="group" aria-label="Svarsalternativ">
                     <button type="button" data-response="accept" class="response-btn">Jag kommer</button>
@@ -82,12 +88,21 @@
     </main>
 
     <footer>
-        <p>Frågor? Skicka sms till <a href="tel:+46738299087">+46 738299087</a> eller maila <a href="mailto:oktoberfest25@example.com">oktoberfest25@example.com</a>.</p>
+        <div class="footer-contact">
+            <p>Frågor, pepp eller wildcards? Hör av dig!</p>
+        </div>
     </footer>
+
+    <div class="jumpscare" id="jumpscare" aria-hidden="true">\r\n        <div class="jumpscare-frame">
+            <img src="assets/jumpscare.jpg" alt="Överraskningsbild som dyker upp efter formuläret skickats">
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
+
 
 
 

@@ -4,8 +4,10 @@
     var submitBtn = form.querySelector(".submit-btn");
     var responseButtons = Array.prototype.slice.call(document.querySelectorAll(".response-btn"));
     var feedback = document.getElementById("feedback");
+    var jumpscare = document.getElementById("jumpscare");
     var storageKey = "oktoberfest25-rsvp";
-    var FORM_ENDPOINT = "https://formspree.io/f/xldprjdq"; // Ersätt med ditt riktiga Formspree-ID
+    var FORM_ENDPOINT = "https://formspree.io/f/xldprjdq";
+    var jumpscareTimer = null;
 
     function setActiveResponse(value) {
         responseButtons.forEach(function (btn) {
@@ -20,8 +22,41 @@
         submitBtn.disabled = !value;
     }
 
+    function hideJumpscare() {
+        if (!jumpscare) {
+            return;
+        }
+        jumpscare.classList.remove("visible");
+        jumpscare.setAttribute("aria-hidden", "true");
+        if (jumpscareTimer) {
+            clearTimeout(jumpscareTimer);
+            jumpscareTimer = null;
+        }
+    }
+
+    function showJumpscare() {
+        if (!jumpscare) {
+            return;
+        }
+        jumpscare.classList.add("visible");
+        jumpscare.setAttribute("aria-hidden", "false");
+        if (jumpscareTimer) {
+            clearTimeout(jumpscareTimer);
+        }
+        jumpscareTimer = setTimeout(hideJumpscare, 3200);
+    }
+
+    if (jumpscare) {
+        jumpscare.addEventListener("click", hideJumpscare);
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && jumpscare.classList.contains("visible")) {
+                hideJumpscare();
+            }
+        });
+    }
+
     function postSubmission(data) {
-        if (!FORM_ENDPOINT || FORM_ENDPOINT.indexOf("yourFormId") !== -1) {
+        if (!FORM_ENDPOINT) {
             return Promise.reject(new Error("Form endpoint saknas"));
         }
 
@@ -34,7 +69,12 @@
             body: JSON.stringify(data)
         }).then(function (response) {
             if (!response.ok) {
-                throw new Error("Misslyckades att skicka formuläret");
+                return response.json().then(function (errorData) {
+                    var message = (errorData && errorData.error) || "Misslyckades att skicka formuläret";
+                    throw new Error(message);
+                }).catch(function () {
+                    throw new Error("Misslyckades att skicka formuläret");
+                });
             }
             return response.json().catch(function () {
                 return {};
@@ -48,7 +88,7 @@
             setActiveResponse(choice);
             feedback.textContent = choice === "accept"
                 ? "Toppen! Fyll i dina uppgifter och klicka på Skicka svar."
-                : "Tråkigt att du inte kan komma. Hör av dig om något ändras!";
+                : "Helt okej. Säg till om planerna ändras!";
         });
     });
 
@@ -78,10 +118,12 @@
                 feedback.textContent = formData.attendance === "accept"
                     ? "Jippie! Ditt svar är skickat och sparat på denna enhet."
                     : "Tack för beskedet. Jag har mottagit ditt svar.";
+                showJumpscare();
             })
             .catch(function (error) {
                 console.warn("RSVP kunde inte skickas", error);
-                feedback.textContent = "Kunde inte skicka till värden just nu. Försök igen eller kontakta mig direkt.";
+                feedback.textContent = error.message || "Kunde inte skicka till värden just nu. Försök igen eller kontakta mig direkt.";
+                hideJumpscare();
             })
             .finally(function () {
                 submitBtn.disabled = false;
@@ -114,4 +156,3 @@
         localStorage.removeItem(storageKey);
     }
 });
-

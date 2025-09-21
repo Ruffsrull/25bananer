@@ -102,6 +102,24 @@ main {
     text-transform: uppercase;
 }
 
+.topline {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    margin-bottom: 0.75rem;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.subnote {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
 .tagline {
     font-size: 1.3rem;
     margin: 0 0 0.5rem;
@@ -113,8 +131,8 @@ main {
 }
 
 .hero-mug {
-    width: clamp(240px, 38vw, 340px);
-    height: clamp(280px, 44vw, 420px);
+    width: clamp(200px, 28vw, 280px);
+    height: clamp(240px, 36vw, 340px);
     position: relative;
     display: flex;
     align-items: flex-end;
@@ -244,8 +262,29 @@ main {
 .rsvp h2 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
-    text-align: left;
+    text-align: center;
     color: var(--deep-brown);
+}
+
+.vibes {
+    margin-top: 3rem;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2.5rem 1.8rem;
+    border-radius: 28px;
+    box-shadow: 0 12px 40px rgba(71, 45, 28, 0.15);
+    border: 2px solid rgba(15, 94, 165, 0.12);
+}
+
+.vibes h2 {
+    margin-top: 0;
+    text-align: center;
+    color: var(--deep-brown);
+}
+
+.vibes p {
+    max-width: 720px;
+    margin: 0.75rem auto;
+    text-align: center;
 }
 
 .detail-grid {
@@ -260,13 +299,17 @@ main {
     border-radius: 18px;
     box-shadow: 0 12px 40px rgba(71, 45, 28, 0.18);
     border: 3px solid rgba(15, 94, 165, 0.15);
-    text-align: left;
+    text-align: center;
 }
+
+
+
 
 .detail-grid h3 {
     margin-top: 0;
     color: var(--bavarian-blue);
 }
+
 
 .rsvp {
     margin-top: 4rem;
@@ -388,7 +431,7 @@ textarea {
 }
 
 footer {
-    text-align: left;
+    text-align: center;
     padding: 2rem 1rem 3rem;
     font-size: 0.95rem;
     color: rgba(71, 45, 28, 0.8);
@@ -519,25 +562,79 @@ footer a:hover {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding: 0 1rem 3rem;
+    }
+
+    main {
+        padding: 0 1rem 3.5rem;
+    }
+
     .hero {
-        justify-content: center;
-        text-align: left;
+        text-align: center;
+        padding: 4rem 1.25rem 2.5rem;
+        gap: 1.75rem;
     }
 
     .hero-text {
         max-width: none;
     }
 
+    .hero h1 {
+        font-size: clamp(2.2rem, 7vw, 3.2rem);
+    }
+
+    .tagline,
+    .date,
+    .subnote {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .hero-mug {
         order: -1;
+        width: min(220px, 60vw);
+        height: min(260px, 66vw);
+    }
+
+    .beer-ribbon-track span {
+        font-size: 0.8rem;
+        padding: 0.45rem 1.1rem;
+        letter-spacing: 0.18em;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid article {
+        padding: 1.4rem;
+    }
+
+
+
+
+    .vibes {
+        padding: 2.2rem 1.4rem;
+    }
+
+    .rsvp form {
+        max-width: 100%;
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
+    .hero {
+        padding: 3.5rem 1rem 2.2rem;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem);
+    }
+
     .beer-ribbon-track span {
         font-size: 0.75rem;
-        letter-spacing: 0.18em;
-        padding: 0.45rem 1rem;
+        padding: 0.4rem 1rem;
     }
 
     .response-buttons {
@@ -548,6 +645,7 @@ footer a:hover {
         width: 100%;
     }
 }
+
 
 
 

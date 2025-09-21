@@ -1,0 +1,20 @@
+﻿.vibes {
+    margin-top: 3rem;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2.5rem 1.8rem;
+    border-radius: 28px;
+    box-shadow: 0 12px 40px rgba(71, 45, 28, 0.15);
+    border: 2px solid rgba(15, 94, 165, 0.12);
+}
+
+.details h2,
+.vibes h2 {
+    text-align: center;
+}
+
+.vibes p {
+    max-width: 720px;
+    margin: 0.75rem auto;
+    text-align: center;
+}
+
