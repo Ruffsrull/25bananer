@@ -8,6 +8,7 @@
     var bringingPartnerSelect = document.getElementById("bringing-partner");
     var submitBtn = form.querySelector(".submit-btn");
     var responseButtons = Array.prototype.slice.call(document.querySelectorAll(".response-btn"));
+    var formInputs = Array.prototype.slice.call(form.querySelectorAll("input, textarea, select"));
     var feedback = document.getElementById("feedback");
     var jumpscare = document.getElementById("jumpscare");
     var storageKey = "oktoberfest25-rsvp";
@@ -16,6 +17,8 @@
     var jumpscareHideTimer = null;
     var recaptchaSiteKey = (form.dataset && form.dataset.recaptchaSitekey) || "";
     var recaptchaScriptInjected = false;
+    var submissionCooldownKey = storageKey + "-submitted-at";
+    var SUBMISSION_COOLDOWN_MS = 10 * 60 * 1000;
     var RECAPTCHA_ACTION = "rsvp_form_submit";
 
     if (jumpscare) {
@@ -92,7 +95,7 @@
             return;
         }
         var script = document.createElement("script");
-        script.src = "https://www.google.com/recaptcha/api.js?render=" + encodeURIComponent(recaptchaSiteKey);
+        script.src = "https://www.google.com/recaptcha/enterprise.js?render=" + encodeURIComponent(recaptchaSiteKey);
         script.async = true;
         script.defer = true;
         script.onerror = function () {
@@ -115,6 +118,19 @@
 
             function waitForRecaptcha() {
                 attempts += 1;
+                if (window.grecaptcha && window.grecaptcha.enterprise && typeof window.grecaptcha.enterprise.ready === "function") {
+                    window.grecaptcha.enterprise.ready(function () {
+                        window.grecaptcha.enterprise.execute(recaptchaSiteKey, { action: action || "submit" })
+                            .then(function (token) {
+                                resolve(token);
+                            })
+                            .catch(function () {
+                                reject(new Error("Kunde inte verifiera reCAPTCHA. Försök igen."));
+                            });
+                    });
+                    return;
+                }
+
                 if (window.grecaptcha && typeof window.grecaptcha.ready === "function") {
                     window.grecaptcha.ready(function () {
                         window.grecaptcha.execute(recaptchaSiteKey, { action: action || "submit" })
@@ -137,6 +153,57 @@
             }
 
             waitForRecaptcha();
+        });
+    }
+
+    function getRemainingCooldownMs() {
+        var stored = Number(localStorage.getItem(submissionCooldownKey) || "0");
+        if (!stored) {
+            return 0;
+        }
+        var elapsed = Date.now() - stored;
+        return elapsed < SUBMISSION_COOLDOWN_MS ? SUBMISSION_COOLDOWN_MS - elapsed : 0;
+    }
+
+    function setCooldownTimestamp(timestamp) {
+        if (!timestamp) {
+            localStorage.removeItem(submissionCooldownKey);
+            return;
+        }
+        localStorage.setItem(submissionCooldownKey, String(timestamp));
+    }
+
+    function formatCooldownMessage(remainingMs) {
+        var minutes = Math.ceil(remainingMs / 60000);
+        if (minutes <= 1) {
+            return "Vänligen vänta någon minut innan du skickar igen.";
+        }
+        return "Vänligen vänta ungefär " + minutes + " minuter innan du skickar igen.";
+    }
+
+    function lockFormAfterSubmission() {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Svar mottaget";
+        responseButtons.forEach(function (btn) {
+            btn.disabled = true;
+        });
+        formInputs.forEach(function (input) {
+            if (input.type !== "hidden") {
+                input.disabled = true;
+            }
+        });
+    }
+
+    function unlockFormForRetry() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Skicka svar";
+        responseButtons.forEach(function (btn) {
+            btn.disabled = false;
+        });
+        formInputs.forEach(function (input) {
+            if (input.type !== "hidden") {
+                input.disabled = false;
+            }
         });
     }
 
@@ -182,6 +249,12 @@
     form.addEventListener("submit", function (event) {
         event.preventDefault();
 
+        var remainingCooldown = getRemainingCooldownMs();
+        if (remainingCooldown > 0) {
+            feedback.textContent = formatCooldownMessage(remainingCooldown);
+            return;
+        }
+
         var formData = {
             name: form.name.value.trim(),
             email: form.email.value.trim(),
@@ -201,6 +274,8 @@
         submitBtn.disabled = true;
         submitBtn.textContent = "Skickar...";
 
+        var submissionCompleted = false;
+
         fetchRecaptchaToken(RECAPTCHA_ACTION)
             .then(function (token) {
                 if (token) {
@@ -209,6 +284,9 @@
                 return postSubmission(formData);
             })
             .then(function () {
+                submissionCompleted = true;
+                setCooldownTimestamp(Date.now());
+                lockFormAfterSubmission();
                 feedback.textContent = formData.attendance === "accept"
                     ? "Jippie! Ditt svar är skickat och sparat på denna enhet."
                     : "Tack för beskedet. Jag har mottagit ditt svar.";
@@ -218,10 +296,13 @@
                 console.warn("RSVP kunde inte skickas", error);
                 feedback.textContent = error.message || "Kunde inte skicka till världen just nu. Försök igen eller kontakta mig direkt.";
                 hideJumpscare();
+                unlockFormForRetry();
             })
             .finally(function () {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Skicka svar";
+                if (!submissionCompleted) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Skicka svar";
+                }
             });
     });
 
@@ -251,5 +332,13 @@
     } catch (error) {
         console.warn("Kunde inte läsa sparat svar", error);
         localStorage.removeItem(storageKey);
+    }
+
+    var initialCooldown = getRemainingCooldownMs();
+    if (initialCooldown > 0) {
+        lockFormAfterSubmission();
+        if (feedback) {
+            feedback.textContent = formatCooldownMessage(initialCooldown);
+        }
     }
 });
