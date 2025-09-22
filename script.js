@@ -1,6 +1,11 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("rsvp-form");
+    if (!form) {
+        return;
+    }
+
     var attendanceInput = document.getElementById("attendance");
+    var bringingPartnerSelect = document.getElementById("bringing-partner");
     var submitBtn = form.querySelector(".submit-btn");
     var responseButtons = Array.prototype.slice.call(document.querySelectorAll(".response-btn"));
     var feedback = document.getElementById("feedback");
@@ -9,6 +14,9 @@
     var FORM_ENDPOINT = "https://formspree.io/f/xldprjdq";
     var jumpscareTimer = null;
     var jumpscareHideTimer = null;
+    var recaptchaSiteKey = (form.dataset && form.dataset.recaptchaSitekey) || "";
+    var recaptchaScriptInjected = false;
+    var RECAPTCHA_ACTION = "rsvp_form_submit";
 
     if (jumpscare) {
         jumpscare.style.display = "none";
@@ -67,7 +75,7 @@
         if (jumpscareTimer) {
             clearTimeout(jumpscareTimer);
         }
-        jumpscareTimer = setTimeout(hideJumpscare, 3200);
+        jumpscareTimer = setTimeout(hideJumpscare, 6000);
     }
 
     if (jumpscare) {
@@ -78,6 +86,61 @@
             }
         });
     }
+
+    function injectRecaptchaScript() {
+        if (!recaptchaSiteKey || recaptchaScriptInjected || window.grecaptcha) {
+            return;
+        }
+        var script = document.createElement("script");
+        script.src = "https://www.google.com/recaptcha/api.js?render=" + encodeURIComponent(recaptchaSiteKey);
+        script.async = true;
+        script.defer = true;
+        script.onerror = function () {
+            console.warn("Kunde inte ladda reCAPTCHA-scriptet.");
+        };
+        document.head.appendChild(script);
+        recaptchaScriptInjected = true;
+    }
+
+    function fetchRecaptchaToken(action) {
+        if (!recaptchaSiteKey) {
+            return Promise.resolve(null);
+        }
+
+        injectRecaptchaScript();
+
+        return new Promise(function (resolve, reject) {
+            var attempts = 0;
+            var maxAttempts = 40;
+
+            function waitForRecaptcha() {
+                attempts += 1;
+                if (window.grecaptcha && typeof window.grecaptcha.ready === "function") {
+                    window.grecaptcha.ready(function () {
+                        window.grecaptcha.execute(recaptchaSiteKey, { action: action || "submit" })
+                            .then(function (token) {
+                                resolve(token);
+                            })
+                            .catch(function () {
+                                reject(new Error("Kunde inte verifiera reCAPTCHA. Försök igen."));
+                            });
+                    });
+                    return;
+                }
+
+                if (attempts >= maxAttempts) {
+                    reject(new Error("reCAPTCHA kunde inte laddas. Uppdatera sidan och försök igen."));
+                    return;
+                }
+
+                setTimeout(waitForRecaptcha, 150);
+            }
+
+            waitForRecaptcha();
+        });
+    }
+
+    injectRecaptchaScript();
 
     function postSubmission(data) {
         if (!FORM_ENDPOINT) {
@@ -124,6 +187,7 @@
             email: form.email.value.trim(),
             message: form.message.value.trim(),
             attendance: attendanceInput.value,
+            bringingPartner: bringingPartnerSelect ? bringingPartnerSelect.value : "",
             savedAt: new Date().toISOString()
         };
 
@@ -137,7 +201,13 @@
         submitBtn.disabled = true;
         submitBtn.textContent = "Skickar...";
 
-        postSubmission(formData)
+        fetchRecaptchaToken(RECAPTCHA_ACTION)
+            .then(function (token) {
+                if (token) {
+                    formData["g-recaptcha-response"] = token;
+                }
+                return postSubmission(formData);
+            })
             .then(function () {
                 feedback.textContent = formData.attendance === "accept"
                     ? "Jippie! Ditt svar är skickat och sparat på denna enhet."
@@ -146,7 +216,7 @@
             })
             .catch(function (error) {
                 console.warn("RSVP kunde inte skickas", error);
-                feedback.textContent = error.message || "Kunde inte skicka till värden just nu. Försök igen eller kontakta mig direkt.";
+                feedback.textContent = error.message || "Kunde inte skicka till världen just nu. Försök igen eller kontakta mig direkt.";
                 hideJumpscare();
             })
             .finally(function () {
@@ -167,6 +237,9 @@
             }
             if (data.message) {
                 form.message.value = data.message;
+            }
+            if (bringingPartnerSelect && data.bringingPartner) {
+                bringingPartnerSelect.value = data.bringingPartner;
             }
             if (data.attendance) {
                 setActiveResponse(data.attendance);

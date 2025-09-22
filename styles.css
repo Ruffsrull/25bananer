@@ -218,6 +218,16 @@ main {
     animation-delay: 0.9s;
 }
 
+.beer-ribbon-track span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.55rem 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
 .beer-ribbon {
     position: relative;
     overflow: hidden;
@@ -233,15 +243,9 @@ main {
     animation: beer-marquee 16s linear infinite;
 }
 
-.beer-ribbon-track span {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.55rem 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    font-size: 0.95rem;
-    white-space: nowrap;
+.beer-ribbon-track span::before {
+    content: none;
+    display: none;
 }
 
 .details {
@@ -326,8 +330,25 @@ label {
     font-weight: 600;
 }
 
+.form-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    margin-bottom: 1.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.form-field.full-width {
+    grid-column: 1 / -1;
+}
 input,
-textarea {
+textarea,
+select {
     padding: 0.75rem 1rem;
     border-radius: 14px;
     border: 2px solid rgba(15, 94, 165, 0.3);
@@ -337,7 +358,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
     outline: none;
     border-color: var(--bavarian-blue);
     box-shadow: 0 0 0 3px rgba(130, 192, 255, 0.5);
@@ -655,6 +677,21 @@ footer a:hover {
     .rsvp form {
         max-width: 100%;
     }
+}.detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid article {
+        padding: 1.4rem;
+    }
+
+    .vibes {
+        padding: 2.2rem 1.4rem;
+    }
+
+    .rsvp form {
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -678,6 +715,30 @@ footer a:hover {
     .response-btn {
         width: 100%;
     }
+}.response-buttons {
+        flex-direction: column;
+    }
+
+    .response-btn {
+        width: 100%;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

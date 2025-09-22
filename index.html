@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>25 oktober Save the Date</title>
+    <title>25 oktober nilsson 25 jordsnurr</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="hero">
         <div class="hero-text">
-            <p class="topline">Facebook-evenemang < vibecode </p>
-            <h1>Nilsson 25 Barre – 25 Oktober</h1>
-            <p class="date">Lördag 25 oktober 2025 · Karlstad (plats avslöjas senare)</p>
-            <p class="subnote">Det här är en intresseanmälan.</p>
+            <p class="topline">tokonödig sida btw</p>
+            <h1>Nilsson 25 Barre - 25 oktober</h1>
+            <p class="date">Lördag 25 oktober 2025 • Karlstad (plats avslöjas senare)</p>
+            <p class="subnote">Det här är en intresseanmälan till något firande eller nåt.</p>
         </div>
         <div class="hero-mug" aria-hidden="true">
             <div class="mug-body">
@@ -32,8 +32,8 @@
 
     <div class="beer-ribbon" aria-hidden="true">
         <div class="beer-ribbon-track">
-            <span>BARA KOM · 25 OKTOBER · BÄRS · BÄRS · MAT · DANS · </span>
-            <span aria-hidden="true">BARA KOM · 25 OKTOBER · BÄRS · BÄRS · MAT · DANS · </span>
+            <span>komsi • 25 oktober • bärs • bärs • mat • dans</span>
+            <span aria-hidden="true">komsi • 25 oktober • bärs • bärs • mat • dans</span>
         </div>
     </div>
 
@@ -43,11 +43,11 @@
             <div class="detail-grid">
                 <article>
                     <h3>Plats</h3>
-                    <p>Karlstad är säkert, exakt spot meddelas när logistiken satt sig.</p>
+                    <p>Karlstad är spikat, exakt spot meddelas när logistiken satt sig.</p>
                 </article>
                 <article>
                     <h3>Klädsel</h3>
-                    <p>Allt från jeans till smoking funkar :=) </p>
+                    <p>Allt från jeans till smoking funkar :=)</p>
                 </article>
                 <article>
                     <h3>Det här händer</h3>
@@ -58,21 +58,39 @@
 
         <section class="vibes" aria-labelledby="vibes-title">
             <h2 id="vibes-title">Vad du kan förvänta dig</h2>
-            <p>Allt hänger på hur många som kommer. Blir vi ett gäng med energi? Då skruvar vi upp tempot. Känns det mer som soffläge? Då kör vi på den nivån. Oavsett vilket – boka in 25 oktober.</p>
+            <p>Det hänger lite på hur många hänger med. Blir vi ett gäng med energi skruvar vi upp tempot. Känns det mer som soffläge? Då kör vi på den nivån. Oavsett vilket – boka in 25 oktober.</p>
         </section>
 
         <section class="rsvp" aria-labelledby="rsvp-title">
             <h2 id="rsvp-title">Kan du komma?</h2>
             <p>Meddela gärna. Skriv även om du har allergier, önskemål eller bara vill säga hej.</p>
-            <form id="rsvp-form">
-                <label for="name">Namn</label>
-                <input type="text" id="name" name="name" placeholder="Ditt namn" required>
+            <form id="rsvp-form" data-recaptcha-sitekey="">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="name">Namn</label>
+                        <input type="text" id="name" name="name" placeholder="Ditt namn" required>
+                    </div>
 
-                <label for="email">E-post</label>
-                <input type="email" id="email" name="email" placeholder="du@example.com" required>
+                    <div class="form-field">
+                        <label for="email">E-post</label>
+                        <input type="email" id="email" name="email" placeholder="du@example.com" required>
+                    </div>
 
-                <label for="message">Meddelande</label>
-                <textarea id="message" name="message" placeholder="Har du förslag eller frågor? Skriv här."></textarea>
+                    <div class="form-field">
+                        <label for="bringing-partner">Tar du med partner?</label>
+                        <select id="bringing-partner" name="bringingPartner">
+                            <option value="">Välj alternativ</option>
+                            <option value="no">Nej, jag kommer solo</option>
+                            <option value="yes">Ja, min partner hänger med</option>
+                            <option value="maybe">Osäker ännu</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label for="message">Meddelande</label>
+                        <textarea id="message" name="message" placeholder="Har du förslag eller frågor? Skriv här."></textarea>
+                    </div>
+                </div>
 
                 <div class="response-buttons" role="group" aria-label="Svarsalternativ">
                     <button type="button" data-response="accept" class="response-btn">Jag kommer</button>
@@ -93,7 +111,8 @@
         </div>
     </footer>
 
-    <div class="jumpscare" id="jumpscare" aria-hidden="true">\r\n        <div class="jumpscare-frame">
+    <div class="jumpscare" id="jumpscare" aria-hidden="true">
+        <div class="jumpscare-frame">
             <img src="assets/jumpscare.jpg" alt="Överraskningsbild som dyker upp efter formuläret skickats">
         </div>
     </div>
@@ -101,9 +120,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
