@@ -1,4 +1,70 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
+    var countdownContainer = document.getElementById("countdown");
+    var countdownMessage = document.getElementById("countdown-message");
+    var countdownSrText = countdownContainer ? countdownContainer.querySelector("[data-countdown=\"sr-text\"]") : null;
+    var countdownValues = countdownContainer ? {
+        days: countdownContainer.querySelector("[data-countdown=\"days\"]"),
+        hours: countdownContainer.querySelector("[data-countdown=\"hours\"]"),
+        minutes: countdownContainer.querySelector("[data-countdown=\"minutes\"]"),
+        seconds: countdownContainer.querySelector("[data-countdown=\"seconds\"]")
+    } : null;
+    if (countdownContainer && countdownValues && countdownValues.days && countdownValues.hours && countdownValues.minutes && countdownValues.seconds) {
+        var countdownTarget = new Date("2025-10-25T00:00:00+02:00");
+        if (isNaN(countdownTarget.getTime())) {
+            countdownTarget = new Date("2025-10-25T00:00:00");
+        }
+        var countdownIntervalId = null;
+        var FINISHED_MESSAGE = "Nu kör vi! Barnkalaset är igång.";
+        function pad(value) {
+            return value < 10 ? "0" + value : String(value);
+        }
+        function formatUnit(value, singular, plural) {
+            return value + " " + (value === 1 ? singular : plural);
+        }
+        function formatAccessible(days, hours, minutes, seconds) {
+            return formatUnit(days, "dag", "dagar") + ", " +
+                formatUnit(hours, "timme", "timmar") + ", " +
+                formatUnit(minutes, "minut", "minuter") + " och " +
+                formatUnit(seconds, "sekund", "sekunder") + " kvar till barnkalaset.";
+        }
+        function updateCountdown() {
+            var now = new Date();
+            var distance = countdownTarget.getTime() - now.getTime();
+            if (distance <= 0) {
+                countdownValues.days.textContent = "0";
+                countdownValues.hours.textContent = "00";
+                countdownValues.minutes.textContent = "00";
+                countdownValues.seconds.textContent = "00";
+                if (countdownMessage) {
+                    countdownMessage.textContent = FINISHED_MESSAGE;
+                    countdownMessage.hidden = false;
+                }
+                countdownContainer.classList.add("countdown--finished");
+                if (countdownSrText) {
+                    countdownSrText.textContent = FINISHED_MESSAGE;
+                }
+                if (countdownIntervalId) {
+                    clearInterval(countdownIntervalId);
+                }
+                return;
+            }
+            var totalSeconds = Math.floor(distance / 1000);
+            var days = Math.floor(totalSeconds / 86400);
+            var hours = Math.floor((totalSeconds % 86400) / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = totalSeconds % 60;
+            countdownValues.days.textContent = String(days);
+            countdownValues.hours.textContent = pad(hours);
+            countdownValues.minutes.textContent = pad(minutes);
+            countdownValues.seconds.textContent = pad(seconds);
+            if (countdownSrText) {
+                countdownSrText.textContent = "Nedräkning till barnkalaset: " + formatAccessible(days, hours, minutes, seconds);
+            }
+        }
+        updateCountdown();
+        countdownIntervalId = setInterval(updateCountdown, 1000);
+    }
+
     var form = document.getElementById("rsvp-form");
     if (!form) {
         return;
@@ -95,7 +161,7 @@
             return;
         }
         var script = document.createElement("script");
-        script.src = "https://www.google.com/recaptcha/enterprise.js?render=" + encodeURIComponent(recaptchaSiteKey);
+        script.src = "https://www.google.com/recaptcha/enterprise.jsärender=" + encodeURIComponent(recaptchaSiteKey);
         script.async = true;
         script.defer = true;
         script.onerror = function () {
@@ -178,7 +244,7 @@
         if (minutes <= 1) {
             return "Vänligen vänta någon minut innan du skickar igen.";
         }
-        return "Vänligen vänta ungefär " + minutes + " minuter innan du skickar igen.";
+        return "Vänligen vänta ungeför " + minutes + " minuter innan du skickar igen.";
     }
 
     function lockFormAfterSubmission() {
@@ -342,3 +408,28 @@
         }
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
