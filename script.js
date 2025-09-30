@@ -161,7 +161,7 @@
             return;
         }
         var script = document.createElement("script");
-        script.src = "https://www.google.com/recaptcha/enterprise.jsärender=" + encodeURIComponent(recaptchaSiteKey);
+        script.src = "https://www.google.com/recaptcha/enterprise.js?render=" + encodeURIComponent(recaptchaSiteKey);
         script.async = true;
         script.defer = true;
         script.onerror = function () {
@@ -178,40 +178,44 @@
 
         injectRecaptchaScript();
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             var attempts = 0;
             var maxAttempts = 40;
 
+            function resolveWithoutToken(message) {
+                if (message) {
+                    console.warn(message);
+                }
+                resolve(null);
+            }
+
+            function executeWith(client) {
+                client.ready(function () {
+                    client.execute(recaptchaSiteKey, { action: action || "submit" })
+                        .then(function (token) {
+                            resolve(token);
+                        })
+                        .catch(function () {
+                            resolveWithoutToken("Kunde inte verifiera reCAPTCHA. Fortsätter utan token.");
+                        });
+                });
+            }
+
             function waitForRecaptcha() {
                 attempts += 1;
+
                 if (window.grecaptcha && window.grecaptcha.enterprise && typeof window.grecaptcha.enterprise.ready === "function") {
-                    window.grecaptcha.enterprise.ready(function () {
-                        window.grecaptcha.enterprise.execute(recaptchaSiteKey, { action: action || "submit" })
-                            .then(function (token) {
-                                resolve(token);
-                            })
-                            .catch(function () {
-                                reject(new Error("Kunde inte verifiera reCAPTCHA. Försök igen."));
-                            });
-                    });
+                    executeWith(window.grecaptcha.enterprise);
                     return;
                 }
 
                 if (window.grecaptcha && typeof window.grecaptcha.ready === "function") {
-                    window.grecaptcha.ready(function () {
-                        window.grecaptcha.execute(recaptchaSiteKey, { action: action || "submit" })
-                            .then(function (token) {
-                                resolve(token);
-                            })
-                            .catch(function () {
-                                reject(new Error("Kunde inte verifiera reCAPTCHA. Försök igen."));
-                            });
-                    });
+                    executeWith(window.grecaptcha);
                     return;
                 }
 
                 if (attempts >= maxAttempts) {
-                    reject(new Error("reCAPTCHA kunde inte laddas. Uppdatera sidan och försök igen."));
+                    resolveWithoutToken("reCAPTCHA kunde inte laddas. Fortsätter utan verifiering.");
                     return;
                 }
 
@@ -408,6 +412,11 @@
         }
     }
 });
+
+
+
+
+
 
 
 
