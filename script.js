@@ -325,7 +325,7 @@
             return;
         }
 
-        var formData = {
+                var formDataSnapshot = {
             name: form.name.value.trim(),
             email: form.email.value.trim(),
             message: form.message.value.trim(),
@@ -334,12 +334,22 @@
             savedAt: new Date().toISOString()
         };
 
-        if (!formData.attendance) {
+        var formPayload = new FormData(form);
+        formPayload.set("name", formDataSnapshot.name);
+        formPayload.set("email", formDataSnapshot.email);
+        formPayload.set("message", formDataSnapshot.message);
+        formPayload.set("attendance", formDataSnapshot.attendance);
+        if (bringingPartnerSelect) {
+            formPayload.set("bringingPartner", formDataSnapshot.bringingPartner);
+        }
+        formPayload.append("submittedAt", formDataSnapshot.savedAt);
+
+                if (!formDataSnapshot.attendance) {
             feedback.textContent = "Välj om du kommer eller inte innan du skickar.";
             return;
         }
 
-        localStorage.setItem(storageKey, JSON.stringify(formData));
+                localStorage.setItem(storageKey, JSON.stringify(formDataSnapshot));
 
         submitBtn.disabled = true;
         submitBtn.textContent = "Skickar...";
@@ -349,15 +359,15 @@
         fetchRecaptchaToken(RECAPTCHA_ACTION)
             .then(function (token) {
                 if (token) {
-                    formData["g-recaptcha-response"] = token;
+                    formPayload.set("g-recaptcha-response", token);
                 }
-                return postSubmission(formData);
+                return postSubmission(formPayload);
             })
             .then(function () {
                 submissionCompleted = true;
                 setCooldownTimestamp(Date.now());
                 lockFormAfterSubmission();
-                feedback.textContent = formData.attendance === "accept"
+                feedback.textContent = formDataSnapshot.attendance === "accept"
                     ? "Jippie! Ditt svar är skickat och sparat på denna enhet."
                     : "Tack för beskedet. Jag har mottagit ditt svar.";
                 showJumpscare();
@@ -412,6 +422,7 @@
         }
     }
 });
+
 
 
 
